@@ -1500,8 +1500,9 @@ const EVENT_OVERVIEW_ICON = `<svg width="22" height="22" viewBox="0 0 22 22" fil
                           </div>
                         </div>
 
-                        <!-- Table Body (Empty State) -->
+                        <!-- Table Body -->
                         <div
+                          *ngIf="schedules.length === 0"
                           class="bg-white min-h-80 flex items-center justify-center"
                         >
                           <div class="text-center py-16">
@@ -1526,6 +1527,122 @@ const EVENT_OVERVIEW_ICON = `<svg width="22" height="22" viewBox="0 0 22 22" fil
                             <p class="text-[#878A99] text-sm mt-2">
                               Click "Add Schedule" to create your first schedule
                             </p>
+                          </div>
+                        </div>
+
+                        <!-- Schedule Rows -->
+                        <div *ngIf="schedules.length > 0" class="bg-white">
+                          <div
+                            *ngFor="let schedule of schedules; let i = index"
+                            class="border-b border-[#E9E9E9] grid grid-cols-[70px_1fr_130px_130px_130px_130px_100px] px-6 py-5 gap-4 hover:bg-gray-50 transition-colors"
+                          >
+                            <!-- Sr. No -->
+                            <div
+                              class="flex items-center justify-center text-base font-semibold text-[#353846]"
+                            >
+                              {{ i + 1 }}
+                            </div>
+
+                            <!-- Title -->
+                            <div class="flex items-center">
+                              <span
+                                class="text-base font-semibold text-[#353846]"
+                                >{{ schedule.title }}</span
+                              >
+                            </div>
+
+                            <!-- Date -->
+                            <div class="flex items-center justify-center">
+                              <span
+                                class="text-base font-semibold text-[#353846]"
+                                >{{ formatDate(schedule.date) }}</span
+                              >
+                            </div>
+
+                            <!-- Start Time -->
+                            <div class="flex items-center justify-center">
+                              <span
+                                class="text-base font-semibold text-[#353846]"
+                                >{{ formatTime(schedule.startTime) }}</span
+                              >
+                            </div>
+
+                            <!-- End Time -->
+                            <div class="flex items-center justify-center">
+                              <span
+                                class="text-base font-semibold text-[#353846]"
+                                >{{ formatTime(schedule.endTime) }}</span
+                              >
+                            </div>
+
+                            <!-- Sponsor -->
+                            <div class="flex items-center justify-center gap-3">
+                              <div
+                                class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
+                              >
+                                {{ getInitials(schedule.speakerName || "") }}
+                              </div>
+                              <span
+                                class="text-base font-semibold text-[#353846]"
+                                >{{ schedule.speakerName }}</span
+                              >
+                            </div>
+
+                            <!-- Action -->
+                            <div class="flex items-center justify-center gap-2">
+                              <button
+                                (click)="editSchedule(schedule)"
+                                class="w-10 h-10 bg-[#009FD8] hover:bg-[#0385b5] rounded-full flex items-center justify-center transition-colors"
+                                title="Edit"
+                              >
+                                <svg
+                                  width="20"
+                                  height="20"
+                                  viewBox="0 0 20 20"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M14.574 5.71296L14.5511 5.6921C14.1138 5.29259 13.5469 5.07259 12.9549 5.07259C12.2912 5.07259 11.6539 5.35355 11.2065 5.84333L2.74597 15.1057C2.66893 15.1902 2.61039 15.2898 2.57429 15.3982L1.57949 18.3805C1.46439 18.7253 1.52218 19.1067 1.73378 19.4005C1.94718 19.6967 2.29095 19.8735 2.65345 19.8735C2.81024 19.8735 2.96355 19.8413 3.10883 19.7777L6.0893 18.5176C6.19401 18.4718 6.28799 18.4045 6.36503 18.3201L14.8255 9.05774C15.7059 8.0939 15.6381 6.59351 14.574 5.71296ZM3.58549 17.8296L4.16928 15.6796L4.21849 15.6256L5.32488 16.6361L5.27567 16.6902L3.58549 17.8296ZM14.6193 7.95585L6.42669 16.8301L5.32029 15.8195L13.5129 6.9453C13.6536 6.79128 13.8461 6.70628 14.0549 6.70628C14.2382 6.70628 14.4138 6.77454 14.5496 6.8986L14.5724 6.91944C14.871 7.1923 14.892 7.65718 14.6193 7.95585Z"
+                                    fill="white"
+                                  />
+                                  <path
+                                    d="M14.0321 12.6089C13.618 12.6089 13.2822 12.9447 13.2822 13.3589V14.3614C13.2822 15.5069 12.3502 16.4389 11.2047 16.4389H1.30388C0.158332 16.4389 -0.773743 15.5069 -0.773743 14.3614V4.54111C-0.773743 3.39556 0.158315 2.46356 1.30388 2.46356H8.47004C8.88425 2.46356 9.22004 2.12777 9.22004 1.71356C9.22004 1.29935 8.88425 0.963562 8.47004 0.963562H1.30388C-0.669119 0.963562 -2.27374 2.5682 -2.27374 4.54111V14.3614C-2.27374 16.3343 -0.669136 17.9389 1.30388 17.9389H11.2046C13.1776 17.9389 14.7821 16.3343 14.7821 14.3614V13.3589C14.7821 12.9447 14.4463 12.6089 14.0321 12.6089Z"
+                                    fill="white"
+                                  />
+                                </svg>
+                              </button>
+                              <button
+                                (click)="deleteSchedule(schedule.id)"
+                                class="w-10 h-10 bg-[#BF0505] hover:bg-[#9b0404] rounded-full flex items-center justify-center transition-colors"
+                                title="Delete"
+                              >
+                                <svg
+                                  width="20"
+                                  height="20"
+                                  viewBox="0 0 20 20"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M15.834 5.83337C15.613 5.83337 15.401 5.92117 15.2447 6.07745C15.0884 6.23373 15.0006 6.44569 15.0006 6.66671V15.9925C14.9767 16.4139 14.7873 16.8088 14.4736 17.0912C14.1598 17.3736 13.7472 17.5205 13.3256 17.5H6.67565C6.25406 17.5205 5.84147 17.3736 5.52774 17.0912C5.21401 16.8088 5.02456 16.4139 5.00065 15.9925V6.66671C5.00065 6.44569 4.91285 6.23373 4.75657 6.07745C4.60029 5.92117 4.38833 5.83337 4.16732 5.83337C3.9463 5.83337 3.73434 5.92117 3.57806 6.07745C3.42178 6.23373 3.33398 6.44569 3.33398 6.66671V15.9925C3.35777 16.8561 3.7228 17.675 4.34913 18.2699C4.97547 18.8648 5.81204 19.1873 6.67565 19.1667H13.3256C14.1893 19.1873 15.0258 18.8648 15.6522 18.2699C16.2785 17.675 16.6435 16.8561 16.6673 15.9925V6.66671C16.6673 6.44569 16.5795 6.23373 16.4232 6.07745C16.267 5.92117 16.055 5.83337 15.834 5.83337Z"
+                                    fill="white"
+                                  />
+                                  <path
+                                    d="M16.6667 3.33337H13.3333V1.66671C13.3333 1.44569 13.2455 1.23373 13.0893 1.07745C12.933 0.921171 12.721 0.833374 12.5 0.833374H7.5C7.27899 0.833374 7.06702 0.921171 6.91074 1.07745C6.75446 1.23373 6.66667 1.44569 6.66667 1.66671V3.33337H3.33333C3.11232 3.33337 2.90036 3.42117 2.74408 3.57745C2.5878 3.73373 2.5 3.94569 2.5 4.16671C2.5 4.38772 2.5878 4.59968 2.74408 4.75596C2.90036 4.91224 3.11232 5.00004 3.33333 5.00004H16.6667C16.8877 5.00004 17.0996 4.91224 17.2559 4.75596C17.4122 4.59968 17.5 4.38772 17.5 4.16671C17.5 3.94569 17.4122 3.73373 17.2559 3.57745C17.0996 3.42117 16.8877 3.33337 16.6667 3.33337ZM8.33333 3.33337V2.50004H11.6667V3.33337H8.33333Z"
+                                    fill="white"
+                                  />
+                                  <path
+                                    d="M9.16667 14.1667V8.33333C9.16667 8.11232 9.07887 7.90036 8.92259 7.74408C8.76631 7.5878 8.55435 7.5 8.33333 7.5C8.11232 7.5 7.90036 7.5878 7.74408 7.74408C7.5878 7.90036 7.5 8.11232 7.5 8.33333V14.1667C7.5 14.3877 7.5878 14.5996 7.74408 14.7559C7.90036 14.9122 8.11232 15 8.33333 15C8.55435 15 8.76631 14.9122 8.92259 14.7559C9.07887 14.5996 9.16667 14.3877 9.16667 14.1667Z"
+                                    fill="white"
+                                  />
+                                  <path
+                                    d="M12.5007 14.1667V8.33333C12.5007 8.11232 12.4129 7.90036 12.2566 7.74408C12.1003 7.5878 11.8883 7.5 11.6673 7.5C11.4463 7.5 11.2343 7.5878 11.0781 7.74408C10.9218 7.90036 10.834 8.11232 10.834 8.33333V14.1667C10.834 14.3877 10.9218 14.5996 11.0781 14.7559C11.2343 14.9122 11.4463 15 11.6673 15C11.8883 15 12.1003 14.9122 12.2566 14.7559C12.4129 14.5996 12.5007 14.3877 12.5007 14.1667Z"
+                                    fill="white"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
