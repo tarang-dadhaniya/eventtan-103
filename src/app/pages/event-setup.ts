@@ -2234,6 +2234,7 @@ export class EventSetupComponent implements OnInit {
     });
 
     this.loadSchedules();
+    this.loadExhibitors();
 
     this.updateActiveRoute();
 
