@@ -1979,7 +1979,7 @@ const EVENT_OVERVIEW_ICON = `<svg width="22" height="22" viewBox="0 0 22 22" fil
                       <h2
                         class="text-xl md:text-2xl font-medium text-[#686868]"
                       >
-                        About {{ eventName || "Event" }}
+                        {{ aboutTitle || "About " + eventName }}
                       </h2>
                       <button
                         (click)="editAboutContent = true"
@@ -2002,48 +2002,13 @@ const EVENT_OVERVIEW_ICON = `<svg width="22" height="22" viewBox="0 0 22 22" fil
                     </div>
 
                     <!-- Content -->
-                    <div class="px-6 md:px-8 py-6 space-y-6">
+                    <div
+                      class="px-6 md:px-8 py-6 max-h-[400px] overflow-y-auto"
+                    >
                       <p
-                        class="text-sm md:text-base text-[#353846] leading-6 md:leading-7"
+                        class="text-sm md:text-base text-[#353846] leading-6 md:leading-7 whitespace-pre-wrap"
                       >
-                        After the rousing success of the 2021 edition, the
-                        expectations from ENGIMACH 2023 have also risen. India
-                        is the only large economy expected to grow significantly
-                        in the coming years. India is also fast emerging as a
-                        preferred manufacturing base in a world seeking reliable
-                        supply chains. On the other hand, Indian industry seeks
-                        more foreign investments, technology, exports and
-                        domestic demand. In this context, ENGIMACH 2023 is
-                        expected to be a major catalyst of economic growth and
-                        generate significant and lasting business outcomes.
-                      </p>
-                      <p
-                        class="text-sm md:text-base text-[#353846] leading-6 md:leading-7"
-                      >
-                        After the rousing success of the 2021 edition, the
-                        expectations from ENGIMACH 2023 have also risen. India
-                        is the only large economy expected to grow significantly
-                        in the coming years. India is also fast emerging as a
-                        preferred manufacturing base in a world seeking reliable
-                        supply chains. On the other hand, Indian industry seeks
-                        more foreign investments, technology, exports and
-                        domestic demand. In this context, ENGIMACH 2023 is
-                        expected to be a major catalyst of economic growth and
-                        generate significant and lasting business outcomes.
-                      </p>
-                      <p
-                        class="text-sm md:text-base text-[#353846] leading-6 md:leading-7"
-                      >
-                        After the rousing success of the 2021 edition, the
-                        expectations from ENGIMACH 2023 have also risen. India
-                        is the only large economy expected to grow significantly
-                        in the coming years. India is also fast emerging as a
-                        preferred manufacturing base in a world seeking reliable
-                        supply chains. On the other hand, Indian industry seeks
-                        more foreign investments, technology, exports and
-                        domestic demand. In this context, ENGIMACH 2023 is
-                        expected to be a major catalyst of economic growth and
-                        generate significant and lasting business outcomes.
+                        {{ aboutDescription }}
                       </p>
                     </div>
                   </div>
@@ -2120,17 +2085,48 @@ const EVENT_OVERVIEW_ICON = `<svg width="22" height="22" viewBox="0 0 22 22" fil
                   </div>
                 </div>
 
-                <!-- Footer with divider and Next button -->
+                <!-- Footer with Back and Next buttons -->
                 <div
-                  class="px-8 py-6 border-t border-[#CED4DA] flex justify-end"
+                  class="px-8 py-6 border-t border-[#CED4DA] flex justify-between items-center"
                 >
+                  <button
+                    (click)="onBack()"
+                    class="flex items-center gap-2 px-5 py-2 bg-[#DEE1EB] hover:bg-[#CED3E0] text-[#4C546C] rounded font-semibold transition-colors"
+                  >
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 18 18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M14.25 9H3.75"
+                        stroke="#4C546C"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M9 14.25L3.75 9L9 3.75"
+                        stroke="#4C546C"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    <span>Back</span>
+                  </button>
+
                   <button
                     (click)="onNext()"
                     class="flex items-center gap-2 px-5 py-2 bg-[#009FD8] hover:bg-[#0385b5] text-white rounded font-semibold transition-colors"
-                    [disabled]="activeFeatures.length === 0"
+                    [disabled]="
+                      selectedFeatureIndex >= activeFeatures.length - 1
+                    "
                     [ngClass]="{
                       'opacity-50 cursor-not-allowed':
-                        activeFeatures.length === 0,
+                        selectedFeatureIndex >= activeFeatures.length - 1,
                     }"
                   >
                     <span>Next</span>
@@ -2192,6 +2188,8 @@ const EVENT_OVERVIEW_ICON = `<svg width="22" height="22" viewBox="0 0 22 22" fil
     <!-- About Detail Modal -->
     <app-about-detail-modal
       [isOpen]="editAboutContent"
+      [initialTitle]="aboutTitle"
+      [initialDescription]="aboutDescription"
       (close)="editAboutContent = false"
       (save)="onAboutSave($event)"
     ></app-about-detail-modal>
@@ -2254,6 +2252,9 @@ export class EventSetupComponent implements OnInit {
   isDeleteModalOpen = false;
   scheduleToDelete: string | null = null;
   exhibitorToDelete: string | null = null;
+  aboutTitle: string = "About ENGIMACH 2023";
+  aboutDescription: string =
+    "After the rousing success of the 2021 edition, the expectations from ENGIMACH 2023 have also risen. India is the only large economy expected to grow significantly in the coming years. India is also fast emerging as a preferred manufacturing base in a world seeking reliable supply chains. On the other hand, Indian industry seeks more foreign investments, technology, exports and domestic demand. In this context, ENGIMACH 2023 is expected to be a major catalyst of economic growth and generate significant and lasting business outcomes.";
 
   activeFeatures: string[] = [
     "schedule",
@@ -2527,6 +2528,11 @@ export class EventSetupComponent implements OnInit {
       this.currentTab = "features";
     } else if (this.currentTab === "features") {
       this.currentTab = "content";
+      this.selectedFeatureIndex = 0;
+    } else if (this.currentTab === "content") {
+      if (this.selectedFeatureIndex < this.activeFeatures.length - 1) {
+        this.selectedFeatureIndex++;
+      }
     } else {
       console.log("Form submitted:", this.formData);
     }
@@ -2536,7 +2542,11 @@ export class EventSetupComponent implements OnInit {
     if (this.currentTab === "features") {
       this.currentTab = "details";
     } else if (this.currentTab === "content") {
-      this.currentTab = "features";
+      if (this.selectedFeatureIndex > 0) {
+        this.selectedFeatureIndex--;
+      } else {
+        this.currentTab = "features";
+      }
     }
   }
 
@@ -2785,8 +2795,11 @@ export class EventSetupComponent implements OnInit {
   }
 
   onAboutSave(aboutData: any) {
-    console.log("About content saved:", aboutData);
-    this.editAboutContent = false;
+    if (aboutData && aboutData.title && aboutData.description) {
+      this.aboutTitle = aboutData.title;
+      this.aboutDescription = aboutData.description;
+      this.editAboutContent = false;
+    }
   }
 
   loadExhibitors() {

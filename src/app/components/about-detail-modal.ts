@@ -1,4 +1,12 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+} from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 
@@ -288,8 +296,10 @@ import { FormsModule } from "@angular/forms";
   `,
   styles: [],
 })
-export class AboutDetailModalComponent {
+export class AboutDetailModalComponent implements OnInit, OnChanges {
   @Input() isOpen = false;
+  @Input() initialTitle: string = "";
+  @Input() initialDescription: string = "";
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<any>();
 
@@ -297,6 +307,23 @@ export class AboutDetailModalComponent {
     title: "",
     description: "",
   };
+
+  ngOnInit() {
+    this.loadInitialData();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.isOpen) {
+      this.loadInitialData();
+    }
+  }
+
+  private loadInitialData() {
+    this.formData = {
+      title: this.initialTitle || "",
+      description: this.initialDescription || "",
+    };
+  }
 
   onCancel() {
     this.close.emit();
