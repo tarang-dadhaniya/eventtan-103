@@ -2652,11 +2652,13 @@ export class EventSetupComponent implements OnInit {
 
   isScheduleModalOpen = false;
   isExhibitorModalOpen = false;
+  isAddSpeakersModalOpen = false;
   isInformationModalOpen = false;
   editAboutContent = false;
   eventId: string = "";
   schedules: Schedule[] = [];
   exhibitors: Exhibitor[] = [];
+  speakers: Speaker[] = [];
   information: Information[] = [];
   searchQuery: string = "";
   editMode = false;
