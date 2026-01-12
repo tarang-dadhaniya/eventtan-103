@@ -189,7 +189,7 @@ const EVENT_OVERVIEW_ICON = `<svg width="22" height="22" viewBox="0 0 22 22" fil
                   >
                 </button>
 
-                <div class="h-px w-16 md:w-28 bg-[#049AD0]"></div>
+                <div class="h-px w-8 sm:w-16 md:w-28 bg-[#049AD0]"></div>
 
                 <button
                   (click)="currentTab = 'features'"
