@@ -4324,6 +4324,9 @@ export class EventSetupComponent implements OnInit {
     } else if (this.galleryImageToDelete) {
       this.imageGalleryService.deleteGalleryImage(this.galleryImageToDelete);
       this.loadGalleryImages();
+    } else if (this.webViewToDelete) {
+      this.webViewService.deleteWebView(this.webViewToDelete);
+      this.loadWebViews();
     }
     this.closeDeleteModal();
   }
@@ -4338,6 +4341,7 @@ export class EventSetupComponent implements OnInit {
     this.socialMediaToDelete = null;
     this.testimonialToDelete = null;
     this.galleryImageToDelete = null;
+    this.webViewToDelete = null;
   }
 
   openExhibitorModal() {
